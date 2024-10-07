@@ -2,6 +2,7 @@ import Food
 import random
 import time
 import msvcrt
+import Games
 
 class Ayum:
 
@@ -9,16 +10,14 @@ class Ayum:
 
     health = 200 #max can be increased to 1000
     health_limit = 200
-    hunger = 1   #max 10
-    hunger_limit = 10
-    age = 1    #max age can be 100. Game will be over with a congrats message
+    hunger = 1  
+    hunger_limit = 10  #max 30
+    age = 1    #max age can be 10. Game will be over with a congrats message
     sleep = 10 #full of sleep = 10. The need will depend on the works ayum has done. if sleep == 0, game will switch off
     sleep_limit = 10
-    attack = 10 #attack of ayum (random 10 to 10*5) max attack can go to 100
+    attack = 10 #attack of ayum (random 10 to 10*3) max attack can go to 100
     attack_limit = 10
     food_inventory = []
-
-    #starting with basic functions. food eating first
 
     def __init__(self) -> None:
         #All these variables will be taken from a saved file. Pandas dataframe will be used.
@@ -30,25 +29,47 @@ class Ayum:
         self.food_inventory = []
         # pass
 
+    def increase_health(self, amount):
+        if amount + self.health <= self.health_limit:
+            self.health += amount
+        else:
+            self.health = self.health_limit
+
+    def increase_hunger(self, amount):
+        if(amount + self.hunger <=  self.hunger_limit):
+            self.hunger += amount
+        else:
+            self.hunger = self.hunger_limit
+
+    def increase_attack(self, amount):
+        if(amount + self.attack <=  self.attack_limit):
+            self.attack += amount
+        else:
+            self.attack = self.attack_limit
+
     def eat_food(self, f):
-        if(self.hunger < 0):
+        if(self.hunger <= 0):
             self.hunger = 0
             print("Ayum is full")
         else:
-            self.hunger -= f.energy 
+            self.hunger -= round(random.randint(int(f.energy / 1.5), int(f.energy)), 2)
             if(self.hunger < 0):
                 self.hunger = 0
             self.food_inventory.remove(f)
-            self.health += random.randint(10, f.energy*2)
+            self.increase_health(random.randint(min(20, f.energy*2), max(30, f.energy*3)))
+            self.attack_limit += random.randint(1, 2)
+            self.increase_attack(random.randint(int(f.energy / 4), int(f.energy / 2)))
+            # self.health += random.randint(10, f.energy*2)
             print(f"Ayum ate {f.name} and now has {self.hunger} hunger")
 
     def sleep_fully(self):
         print("Ayum is sleeping.... Press any key to wake up or let Ayum sleep fully")
-        while self.sleep < 10:
+        while self.sleep < self.sleep_limit:
             print("Ayum is sleeping....")
             self.sleep += 1
             if(self.health < self.health_limit):
-                self.health += random.randint(1, 20)
+                self.health += random.randint(5*self.age, 10*self.age)
+                self.increase_hunger(random.randint(0, 2))
                 if(self.health > self.health_limit):
                     self.health = self.health_limit
             
@@ -61,6 +82,7 @@ class Ayum:
                     self.sleep = int(self.sleep)
                     return  # Exit the method if a key is pressed
             
+        self.sleep = int(self.sleep)
         print(f"Ayum slept and now has {int(self.sleep)} sleep")
 
     def search_food(self):
@@ -73,13 +95,18 @@ class Ayum:
         self.sleep -= 0.25
 
     def hunt(self, animal):
-        attack_power = random.randint(self.attack*2, self.attack*5 - int(self.sleep_limit - self.sleep)*2)
+        # additive_multiplier = self.age*2 - int(self.hunger*2)
+        attack_power = random.randint(int(self.attack*(1.5)) + self.age*3 - min(int(self.hunger / 3.5), 10), self.attack*3 + self.age*3 - min(25, int((self.sleep_limit - self.sleep)*1.5)) - min(int(self.hunger / 3.5), 10))
+        print(int(self.attack*1.5), 'self.attack*1.5', int(self.hunger / 3), self.attack*3)
         if(self.sleep > 0):
             self.sleep -= 0.02*attack_power
         else:
             self.sleep = 0
         self.sleep = round(self.sleep, 2)
+        self.increase_hunger(min(2, round(attack_power / 25, 2)))
         animal.health -= attack_power
+        if(animal.health < 0):
+            animal.health = 0
         return attack_power
         # if animal.health <= 0:
         #     print(f"{animal.name} has been defeated!")
@@ -96,7 +123,50 @@ class Ayum:
             print("Ayum is very tired. He needs to sleep")
             problem = True
         return problem
+    
+    def play_games(self):
+        print("It seems Ayum wants to chill. Which game does he want to play?")
+        games = ["Number Guessing", "7 up 7 down"]
+        for i in range(0, len(games)):
+            print(f"{i + 1} {games[i]}")
+        
+        print(f"{len(games) + 1} Exit Games")
+        
+        print("Which game would you like to play? Enter the game number: ")
+        
+        x = 0
 
+        exec = False
+        while(exec != True):
+            try:
+                x = int(input())
+                exec = True
+                if(x > len(games) + 1 or x < 1):
+                    exec = False
+            except:
+                print("Invalid input. Please try again!")
+                exec = False
+        
+        if(x == len(games) + 1):
+            print("Alright! We will play some other time :)")
+            return
+        
+        print(f"Let's play the {games[x - 1]} game!")
+
+        if(x == 1):
+            Games.Game.Number_guessing(self)
+        if(x == 2):
+            Games.Game.SevenUp(self)
+
+    def age_bonus(self):
+        #Can add more to age bonus
+        self.hunger_limit += random.randint(1, 3)
+        self.health_limit += random.randint(self.age*2, self.age*5)
+        self.attack += 2
+        self.attack_limit += 1
+        if(self.attack > self.attack_limit):
+            self.attack = self.attack_limit
+        
     def __str__(self) -> str:
-        return "Hello"
+        return "I am Ayum. Nice to meet you!"
     
