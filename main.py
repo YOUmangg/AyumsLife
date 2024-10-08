@@ -1,14 +1,45 @@
 import Human, Food, Animals, Games
 import random
 import time
+from storage import reset_game
+from tabulate import tabulate
 
-Ayum = Human.Ayum()
+# Ayum = Human.Ayum()
+def print_game_title():
+    print("""
 
-# Have to add weighted random choice according to the age of Ayum
+     ___   ____    ____  __    __  .___  ___.  __     _______.    __       __   _______  _______ 
+    /   \  \   \  /   / |  |  |  | |   \/   | (_ )   /       |   |  |     |  | |   ____||   ____|
+   /  ^  \  \   \/   /  |  |  |  | |  \  /  |  |/   |   (----`   |  |     |  | |  |__   |  |__   
+  /  /_\  \  \_    _/   |  |  |  | |  |\/|  |        \   \       |  |     |  | |   __|  |   __|  
+ /  _____  \   |  |     |  `--'  | |  |  |  |    .----)   |      |  `----.|  | |  |     |  |____ 
+/__/     \__\  |__|      \______/  |__|  |__|    |_______/       |_______||__| |__|     |_______|
+                                                                                                 
 
-# How to increase age?
-# number of operations. For num_ops > age. [growing up should be dependent on age too, also decide on
-# other limits based on age too!]
+""")
+    
+def start_new_game():
+    return Human.Ayum()
+
+print("Welcome to Ayum's Life!")
+print("1. Start New Game")
+print("2. Load Saved Game")
+print("3. Reset Saved Data")
+choice = input("Enter your choice (1/2/3): ")
+if choice == '1':
+    Ayum = start_new_game()
+elif choice == '2':
+    Ayum = Human.Ayum()
+    if not Ayum.load_state():
+        print("No saved game found. Starting a new game.")
+        Ayum = start_new_game()
+elif choice == '3':
+    reset_game()
+    print("Saved data has been reset. Starting a new game.")
+    Ayum = start_new_game()
+else:
+    print("Invalid choice. Starting a new game.")
+    Ayum = start_new_game()
 
 # Abstraction increase. x == 1, 2 etc should all be methods defined in objects for better readability
 
@@ -17,7 +48,14 @@ Ayum = Human.Ayum()
 # Consider the case when Ayum is full but health is not full.
 # Consider the case when Ayum is not full but health is full.
 
+#Health limit should increase while eating and searching for food too?
+#num_ops increase when playing games?
+#check where health and attack stats are increasing. health needs to increase more
+#time change, because saved game is also in place now
+
 game = "Yes"
+
+print_game_title()
 
 num_ops = 0
 
@@ -31,10 +69,14 @@ while game == "Yes":
         num_ops = 0
         print("Congrats! Ayum is an year older now.")
     print("These are the current stats of Ayum: ")
-    ayum_stats = Ayum.__dict__.copy()
-    ayum_stats.pop("food_inventory", None)
-
-    print(ayum_stats)
+    stats = [
+    ["Health", Ayum.health, Ayum.progress_bar(Ayum.health, Ayum.health_limit)],
+    ["Hunger", Ayum.hunger, Ayum.progress_bar(Ayum.hunger, Ayum.hunger_limit)],
+    ["Age", Ayum.age],
+    ["Sleep", Ayum.sleep, Ayum.progress_bar(Ayum.sleep, Ayum.sleep_limit)],
+    ["Attack", Ayum.attack, Ayum.progress_bar(Ayum.attack, Ayum.attack_limit)]
+    ]
+    print(tabulate(stats, headers=["Attribute", "Value"], tablefmt="fancy_grid"))
 
     check = Ayum.check_for_stats()
 
@@ -54,20 +96,30 @@ while game == "Yes":
         end_time = time.time()
         print("These are your final stats for Ayum. You finished the game in: {} minutes".format(round((end_time - start_time) / 60), 2))
         game = "No"
-        ayum_stats = Ayum.__dict__.copy()
-        ayum_stats.pop("food_inventory", None)
+        ayum_stats = {
+            'health': Ayum.health,
+            'hunger': Ayum.hunger,
+            'age': Ayum.age,
+            'sleep': Ayum.sleep,
+            'attack': Ayum.attack
+        }
         print(ayum_stats)
         break
 
     time.sleep(1)
-    print("What do you want to do? Type the option number: ")
-    print("1. Eat")
-    print("2. Sleep")
-    print("3. Search for food")
-    print("4. Hunt")
-    print("5. Check inventory")
-    print("6. Play Games")
-    print("7. Exit")
+    print("┌─────────────────────┐")
+    print("│ What do you want to │")
+    print("│        do?          │")
+    print("├─────────────────────┤")
+    print("│ 1. Eat              │")
+    print("│ 2. Sleep            │")
+    print("│ 3. Search for food  │")
+    print("│ 4. Hunt             │")
+    print("│ 5. Check inventory  │")
+    print("│ 6. Play Games       │")
+    print("│ 7. Save Game        │")
+    print("│ 8. Exit             │")
+    print("└─────────────────────┘")
 
     if check == True:
         print("Ayum is too weak to do anything. You need to take care of him!")
@@ -84,28 +136,36 @@ while game == "Yes":
 
     if x == 1:
         if len(Ayum.food_inventory) > 0:
-            print("Ayum has the following food in his inventory: ")
-            for i in range(len(Ayum.food_inventory)):
-                print(f"{i+1}. {Ayum.food_inventory[i].name}")
+            print("Ayum has the following food in his inventory:")
+            for i, food in enumerate(Ayum.food_inventory):
+                if food is not None:
+                    print(f"{i+1}. {food.name}")
+                else:
+                    print(f"{i+1}. Empty slot")
+                    pass
+
             print("Which food do you want to eat? Type the food number: ")
-            food_choice = int(input())
-            if food_choice <= 0 or food_choice > len(
-                Ayum.food_inventory
-            ):  # handling the invalid input case.
-                print("Please enter a valid food choice number.")
-            else:
-                food_choice = Ayum.food_inventory[food_choice - 1]
-                Ayum.eat_food(food_choice)
+            while True:
+                try:
+                    food_choice = int(input())
+                    if food_choice <= 0 or food_choice > len(Ayum.food_inventory):
+                        print("Please enter a valid food choice number.")
+                    else:
+                        food_choice = Ayum.food_inventory[food_choice - 1]
+                        Ayum.eat_food(food_choice)
+                        break
+                except ValueError:
+                    print("Please enter a valid integer for the food choice.")
         else:
             print(
                 "Ayum has no food in his inventory. You need to search for food first!"
             )
     elif x == 2:
         Ayum.sleep_fully()
-        num_ops += 1
+        num_ops += 0.5
     elif x == 3:
         Ayum.search_food()
-        num_ops += 1
+        num_ops += 0.5
     elif x == 4:
         animal = Animals.Animal
         animal = Animals.Animal.select_animal(Ayum.age)
@@ -154,8 +214,11 @@ while game == "Yes":
     elif x == 5:
         if len(Ayum.food_inventory) > 0:
             print("Ayum has the following food in his inventory: ")
-            for i in range(len(Ayum.food_inventory)):
-                print(f"{i+1}. {Ayum.food_inventory[i].name}")
+            for i, food in enumerate(Ayum.food_inventory):
+                if food is not None:
+                    print(f"{i+1}. {food.name}")
+                else:
+                    print(f"{i+1}. Empty slot")
         else:
             print(
                 "Ayum has no food in his inventory. You need to search for food first!"
@@ -164,13 +227,30 @@ while game == "Yes":
         Ayum.play_games()
 
     elif x == 7:
+        Ayum.save_state()
+
+    elif x == 8:
         print(
             "Ayum has decided to go home. He is tired and wants to sleep. Goodbye! Your final stats are: "
         )
-        # print(Ayum.__dict__)
-        ayum_stats = Ayum.__dict__.copy()
-        ayum_stats.pop("food_inventory", None)
-
+        ayum_stats = {
+            'health': Ayum.health,
+            'hunger': Ayum.hunger,
+            'age': Ayum.age,
+            'sleep': Ayum.sleep,
+            'attack': Ayum.attack
+        }
         print(ayum_stats)
         print("Thanks for taking care of Ayum!")
         game = "No"
+
+stats = [
+    ["Health", Ayum.health, Ayum.progress_bar(Ayum.health, Ayum.health_limit)],
+    ["Hunger", Ayum.hunger, Ayum.progress_bar(Ayum.hunger, Ayum.hunger_limit)],
+    ["Age", Ayum.age],
+    ["Sleep", Ayum.sleep, Ayum.progress_bar(Ayum.sleep, Ayum.sleep_limit)],
+    ["Attack", Ayum.attack, Ayum.progress_bar(Ayum.attack, Ayum.attack_limit)]
+    ]
+print(tabulate(stats, headers=["Attribute", "Value"], tablefmt="fancy_grid"))
+
+

@@ -61,7 +61,10 @@ class Game:
                     print("Congratulations! You guessed the number in ", guesses_made, "tries")
                     print("You took {} seconds to complete the game.".format(round((end_time - start_time), 2)))
                     Ayum.increase_health(random.randint(40, 100))
-                    Ayum.health_limit += 10
+                    Ayum.increase_hunger(random.randint(1, 2))
+                    Ayum.health_limit += random.randint(20, 50)
+                    Ayum.sleep_limit += random.randint(0, 1)
+                    Ayum.sleep -= random.randint(0, 2)
                     try:
                         playsound(r'Projects\Number-Guessing-Game\sounds\WinSound.wav')
                     except:
@@ -73,7 +76,10 @@ class Game:
                         end_time = time.time()
                         print("Sorry, you lost the game. The number I had chosen was: ", num_to_guess)
                         print("You took {} seconds to complete the game.".format(round((end_time - start_time), 2)))
-                        Ayum.health_limit += 10 
+                        Ayum.health_limit += random.randint(20, 50)
+                        Ayum.increase_hunger(random.randint(3, 4))
+                        Ayum.sleep_limit += random.randint(0, 2)
+                        Ayum.sleep -= random.randint(0, 2)
                         Ayum.increase_health(random.randint(20, 40))
                         try:
                             playsound(r'Projects\Number-Guessing-Game\sounds\LossSound.wav')
@@ -122,8 +128,9 @@ class Game:
             print("")
 
         print("Welcome to the game of 7 up 7 down! I am Kuppu, your opponent for today. I will roll 2 die, ")
+        time.sleep(1)
         print("and you have to predict if the sum of the numbers present on the die is greater than, equal to or less than 7.")
-        time.sleep(0.5)
+        time.sleep(2)
         output = roll_die()
 
         print("Enter your guess! -1 for less than 7, 0 for equal to 7, and 1 for greater than 7")
@@ -152,10 +159,16 @@ class Game:
 
         if(win == True):
             Ayum.increase_health(random.randint(40, 80))
-            Ayum.health_limit += 10
+            Ayum.increase_hunger(random.randint(1, 2))
+            Ayum.health_limit += random.randint(20, 50)
+            Ayum.sleep_limit += random.randint(0, 1)
+            Ayum.sleep -= random.randint(0, 2)
         if(win == False):
             print(f"Sorry! The die had a sum of {sum}. Better luck next time!")
             Ayum.increase_health(random.randint(20, 40))
-            Ayum.health_limit += 10
+            Ayum.increase_hunger(random.randint(3, 4))
+            Ayum.health_limit += random.randint(10, 50)
+            Ayum.sleep_limit += random.randint(0, 2)
+            Ayum.sleep -= random.randint(0, 2)
             
 

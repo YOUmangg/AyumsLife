@@ -30,9 +30,30 @@ class Animal:
         elif age < 6:
             an_list = animal_list + difficult_animal_list
             weights = [1] * len(animal_list) + [8] * len(difficult_animal_list)
-        else:
+        elif age < 9:
             an_list = animal_list + difficult_animal_list + extremely_difficult_animal_list
             weights = [1] * len(animal_list) + [1] * len(difficult_animal_list) + [16] * len(extremely_difficult_animal_list)
+        else:
+            an_list = impossible_list
+            weights = [100]
+            print("""                     /^\/^\  
+                   _|__|  O| 
+          \/     /~     \_/ \  
+           \____|__________/  \
+                  \_______      \
+                          `\     \                 \
+                            |     |                  \
+                           /      /                    \
+                          /     /                       \\
+                        /      /                         \ \
+                       /     /                            \  \
+                     /      /                              \   \
+                    /     /                                 \    \
+                  /      /                                   \    \
+                 /     /                                      \   \
+                /     /                                         \  \
+               /____ /                                           \__\
+""")
         return random.choices(an_list, weights=weights, k=1)[0]
 
 # Animal.select_animal = select_animal
@@ -55,11 +76,12 @@ chimera = Animal("Chimera", 55, 600, 30)
 manticore = Animal("Manticore", 60, 700, 35)
 
 # extremely difficult level
-kraken = Animal("Kraken", 120, 4500, 40)
-hydra = Animal("Hydra", 110, 3000, 45)
-phoenix = Animal("Phoenix", 100, 7500, 50)
+kraken = Animal("Kraken", 120, 4000, 40)
+hydra = Animal("Hydra", 110, 3500, 45)
+phoenix = Animal("Phoenix", 70, 6000, 50)
 Titanoboa_Carni = Animal("Titanoboa_Carni", 250, 10000, 100)
 
 animal_list = [wolf, lion, wild_boar, wild_dog, bear, tiger, hyena]
 difficult_animal_list = [dinosaur, Dragon, gorilla, griffin, chimera, manticore]
-extremely_difficult_animal_list = [kraken, hydra, phoenix, Titanoboa_Carni]
+extremely_difficult_animal_list = [kraken, hydra, phoenix]
+impossible_list = [Titanoboa_Carni]

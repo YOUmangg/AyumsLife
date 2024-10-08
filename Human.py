@@ -3,6 +3,7 @@ import random
 import time
 import msvcrt
 import Games
+from storage import save_game, load_game
 
 class Ayum:
 
@@ -56,8 +57,10 @@ class Ayum:
             if(self.hunger < 0):
                 self.hunger = 0
             self.food_inventory.remove(f)
+            self.health_limit += (random.randint(min(20, f.energy*2), max(30, f.energy*3)))
             self.increase_health(random.randint(min(20, f.energy*2), max(30, f.energy*3)))
-            self.attack_limit += random.randint(1, 2)
+            # self.attack_limit += random.randint(1, 2)
+            self.attack_limit += random.randint(int(f.energy / 2), int(f.energy*2))
             self.increase_attack(random.randint(int(f.energy / 4), int(f.energy / 2)))
             # self.health += random.randint(10, f.energy*2)
             print(f"Ayum ate {f.name} and now has {self.hunger} hunger")
@@ -65,13 +68,16 @@ class Ayum:
     def sleep_fully(self):
         print("Ayum is sleeping.... Press any key to wake up or let Ayum sleep fully")
         while self.sleep < self.sleep_limit:
-            print("Ayum is sleeping....")
+            print("Ayum is sleeping....💤")
             self.sleep += 1
-            if(self.health < self.health_limit):
-                self.health += random.randint(5*self.age, 10*self.age)
-                self.increase_hunger(random.randint(0, 2))
-                if(self.health > self.health_limit):
-                    self.health = self.health_limit
+            self.health_limit += random.randint(5, 10)
+            self.increase_health(random.randint(5*self.age, 10*self.age))
+            self.increase_hunger(random.randint(0, 2))
+            # if(self.health < self.health_limit):
+            #     self.health += random.randint(5*self.age, 10*self.age)
+            #     self.increase_hunger(random.randint(0, 2))
+            #     if(self.health > self.health_limit):
+            #         self.health = self.health_limit
             
             # Check for keypress for 1 second
             start_time = time.time()
@@ -90,13 +96,14 @@ class Ayum:
         time.sleep(1)
         random_food = random.choice(Food.food_list)
         print(f"Ayum found {random_food.name}!")
+        self.health_limit += random.randint(1, 5)
         self.hunger += random.randint(1, random_food.energy) % 2
         self.food_inventory.append(random_food)
         self.sleep -= 0.25
 
     def hunt(self, animal):
         # additive_multiplier = self.age*2 - int(self.hunger*2)
-        attack_power = random.randint(int(self.attack*(1.5)) + self.age*3 - min(int(self.hunger / 3.5), 10), self.attack*3 + self.age*3 - min(25, int((self.sleep_limit - self.sleep)*1.5)) - min(int(self.hunger / 3.5), 10))
+        attack_power = random.randint(int(self.attack*(1.6)) + self.age*6 - min(int(self.hunger / 4), 10), int(self.attack*3.5) + self.age*6 - min(25, int((self.sleep_limit - self.sleep)*1.5)) - min(int(self.hunger / 4), 10))
         print(int(self.attack*1.5), 'self.attack*1.5', int(self.hunger / 3), self.attack*3)
         if(self.sleep > 0):
             self.sleep -= 0.02*attack_power
@@ -161,12 +168,38 @@ class Ayum:
     def age_bonus(self):
         #Can add more to age bonus
         self.hunger_limit += random.randint(1, 3)
-        self.health_limit += random.randint(self.age*2, self.age*5)
-        self.attack += 2
-        self.attack_limit += 1
-        if(self.attack > self.attack_limit):
-            self.attack = self.attack_limit
-        
+        self.health_limit += random.randint(self.age*25, self.age*50)
+        self.attack_limit += random.randint(5*self.age, 10*self.age)
+        self.increase_attack(10)
+    
+    def save_state(self):
+        save_game(self)
+        print("Game saved successfully!")
+
+    def load_state(self):
+        game_state = load_game()
+        if game_state:
+            self.health = game_state['health']
+            self.health_limit = game_state['health_limit']
+            self.hunger = game_state['hunger']
+            self.hunger_limit = game_state['hunger_limit']
+            self.age = game_state['age']
+            self.sleep = game_state['sleep']
+            self.sleep_limit = game_state['sleep_limit']
+            self.attack = game_state['attack']
+            self.attack_limit = game_state['attack_limit']
+            self.food_inventory = [Food.food.get_food_by_name(name) for name in game_state['food_inventory'] if name is not None]
+            print("Game loaded successfully!")
+            return True
+        return False
+    
     def __str__(self) -> str:
         return "I am Ayum. Nice to meet you!"
     
+
+    @staticmethod
+    def progress_bar(value, max_value, width=20):
+        filled = int(width * value / max_value)
+        bar = '█' * filled + '░' * (width - filled)
+        return f"[{bar}] {value}/{max_value}"
+    # print(f"Health: {progress_bar(Ayum.health, Ayum.health_limit)}")
