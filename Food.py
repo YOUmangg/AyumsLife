@@ -21,6 +21,7 @@ orange = food("Orange", 15)
 banana = food("Banana", 10)
 dhaniya = food("Dhaniya", 2)
 berries = food("Berries", 12)
+chicken = food("Chicken", 17)
 
 
-food_list = [carrot, apple, pasta, orange, banana, dhaniya, berries]
+food_list = [carrot, apple, pasta, orange, banana, dhaniya, berries, chicken]
