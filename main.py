@@ -71,6 +71,7 @@ while game == "Yes":
         Ayum.num_ops = 0
         print(Fore.GREEN + "Congrats! Ayum is an year older now.")
         time.sleep(1)
+    time.sleep(0.3)
     print(Fore.CYAN + "These are the current stats of Ayum: ")
     stats = [
     ["Health", Ayum.health, Ayum.progress_bar(Ayum.health, Ayum.health_limit)],
@@ -233,6 +234,7 @@ while game == "Yes":
             print(Fore.RED +
                 "Ayum has no food in his inventory. You need to search for food first!"
             )
+        time.sleep(2)
     elif x == 6:
         play = Ayum.play_games()
         if(play == True):
@@ -246,6 +248,9 @@ while game == "Yes":
             "Ayum has decided to go home. He is tired of the expedition and wants to rest. Goodbye! Your final stats are: "
         )
         game = "No"
+    
+    else:
+        print("Please enter a valid input.")
 
 print(Fore.CYAN + "Ayum's stats are: ")
 stats = [
