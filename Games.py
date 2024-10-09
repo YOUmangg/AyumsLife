@@ -103,9 +103,9 @@ class Game:
 
         def roll_die():
             print(Fore.CYAN + "Rolling the die..")
-            time.sleep(0.5)
+            time.sleep(0.8)
             print(Fore.CYAN + "Rolling the die.")
-            time.sleep(0.5)
+            time.sleep(0.8)
             print(Fore.GREEN + "ROLLED! ")
             a = random.randint(1, 6)
             b = random.randint(1, 6)
@@ -128,7 +128,7 @@ class Game:
             print("")
 
         print(Fore.GREEN + "Welcome to the game of 7 up 7 down! I am Kuppu, your opponent for today. I will roll 2 die, ")
-        time.sleep(1)
+        time.sleep(2)
         print(Fore.CYAN + "and you have to predict if the sum of the numbers present on the die is greater than, equal to or less than 7.")
         time.sleep(2)
         output = roll_die()

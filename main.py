@@ -70,6 +70,7 @@ while game == "Yes":
         Ayum.age_bonus()
         Ayum.num_ops = 0
         print(Fore.GREEN + "Congrats! Ayum is an year older now.")
+        time.sleep(1)
     print(Fore.CYAN + "These are the current stats of Ayum: ")
     stats = [
     ["Health", Ayum.health, Ayum.progress_bar(Ayum.health, Ayum.health_limit)],
@@ -79,6 +80,7 @@ while game == "Yes":
     ["Attack", Ayum.attack, Ayum.progress_bar(Ayum.attack, Ayum.attack_limit)]
     ]
     print(Fore.WHITE + Back.BLUE + Style.BRIGHT + tabulate(stats, headers=["Attribute", "Value"], tablefmt="fancy_grid"))
+    time.sleep(1)
 
     check = Ayum.check_for_stats()
 
@@ -91,15 +93,15 @@ while game == "Yes":
         print(Fore.GREEN +
             """Huge congratulations to Ayum on completing an incredible journey and surviving against all odds! As Ayum reaches the milestone of 10 years old, they emerge victorious from the wilderness, a testament to their strength, resilience, and determination."""
         )
-        time.sleep(3)
+        time.sleep(5)
         print(Fore.YELLOW + """From the scorching deserts to the icy tundras, Ayum has faced every environment and overcome countless challenges, whether it was foraging for food, dodging dangers, or building shelter. And yet, they have persevered, grown, and thrived.
               This achievement is not just a testament to Ayum's survival skills, but also to their exploration, creativity, and adaptability. They have explored uncharted territories, discovered new resources, and made friends and allies along the way."""
         )
-        time.sleep(3)
+        time.sleep(5)
         print(Fore.CYAN +
             """As Ayum looks out at the world they've conquered, they can take pride in knowing that they've truly earned their place as a survivor, a leader, and a master of their domain. Well done, Ayum! May your journey be a reminder that with hard work, determination, and a spirit of adventure, anything is possible!"""
         )
-        time.sleep(2)
+        time.sleep(3)
         end_time = time.time()
         print(Fore.GREEN + "These are your final stats for Ayum. You finished the game in: {} minutes".format(round((end_time - start_time) / 60), 2))
         game = "No"

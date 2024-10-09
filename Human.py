@@ -103,7 +103,6 @@ class Ayum:
     def hunt(self, animal):
         # additive_multiplier = self.age*2 - int(self.hunger*2)
         attack_power = random.randint(int(self.attack*(1.6)) + self.age*6 - min(int(self.hunger / 4), 10), int(self.attack*3.5) + self.age*6 - min(25, int((self.sleep_limit - self.sleep)*1.5)) - min(int(self.hunger / 4), 10))
-        print(Fore.CYAN + f"{int(self.attack*1.5)} self.attack*1.5 {int(self.hunger / 3)} {self.attack*3}")
         if(self.sleep > 0):
             self.sleep -= min(0.02*attack_power, 2*(Ayum.age / 2))
         else:
