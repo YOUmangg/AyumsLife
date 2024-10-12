@@ -81,7 +81,7 @@ while game == "Yes":
     ["Attack", Ayum.attack, Ayum.progress_bar(Ayum.attack, Ayum.attack_limit)]
     ]
     print(Fore.WHITE + Back.BLUE + Style.BRIGHT + tabulate(stats, headers=["Attribute", "Value"], tablefmt="fancy_grid"))
-    time.sleep(1)
+    time.sleep(0.8)
 
     check = Ayum.check_for_stats()
 
@@ -154,11 +154,14 @@ while game == "Yes":
                     print(Fore.CYAN + f"{i+1}. Empty slot")
                     pass
 
-            print(Fore.YELLOW + "Which food do you want to eat? Type the food number: ")
+            print(Fore.YELLOW + "Which food do you want to eat? Type the food number or -1 to exit: ")
             while True:
                 try:
                     food_choice = int(input(Fore.CYAN + "Enter food number: "))
-                    if food_choice <= 0 or food_choice > len(Ayum.food_inventory):
+                    if(food_choice == -1):
+                        break
+
+                    if food_choice <= -1 or food_choice > len(Ayum.food_inventory):
                         print(Fore.RED + "Please enter a valid food choice number.")
                     else:
                         food_choice = Ayum.food_inventory[food_choice - 1]
