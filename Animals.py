@@ -141,18 +141,18 @@ tiger = Animal("Tiger", 22, 180, 18)
 hyena = Animal("Hyena", 12, 90, 12)
 
 # difficult level
-dinosaur = Animal("Dinosaur", 30, 400, 20)
+dinosaur = Animal("Dinosaur", 40, 500, 20)
 Dragon = Animal("Dragon", 50, 900, 20)
-gorilla = Animal("Gorilla", 40, 350, 20)
+gorilla = Animal("Gorilla", 40, 450, 20)
 griffin = Animal("Griffin", 45, 500, 25)
-chimera = Animal("Chimera", 55, 600, 30)
-manticore = Animal("Manticore", 60, 700, 35)
+chimera = Animal("Chimera", 55, 800, 30)
+manticore = Animal("Manticore", 60, 900, 35)
 
 # extremely difficult level
 kraken = Animal("Kraken", 120, 4000, 40)
 hydra = Animal("Hydra", 110, 3500, 45)
 phoenix = Animal("Phoenix", 70, 6000, 50)
-Titanoboa_Carni = Animal("Titanoboa_Carni", 400, 25000, 100)
+Titanoboa_Carni = Animal("Titanoboa_Carni", 650, 30000, 100)
 
 animal_list = [wolf, lion, wild_boar, wild_dog, bear, tiger, hyena]
 difficult_animal_list = [dinosaur, Dragon, gorilla, griffin, chimera, manticore]

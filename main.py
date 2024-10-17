@@ -113,7 +113,7 @@ while game == "Yes":
             'sleep': Ayum.sleep,
             'attack': Ayum.attack
         }
-        print(Fore.CYAN + str(ayum_stats))
+        # print(Fore.CYAN + str(ayum_stats))
         break
 
     time.sleep(1)
